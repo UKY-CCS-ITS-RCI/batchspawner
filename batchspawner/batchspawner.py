@@ -265,6 +265,8 @@ class BatchSpawnerBase(Spawner):
 
     async def submit_batch_script(self):
         subvars = self.get_req_subvars()
+        if hasattr(self, "user_options"):
+            subvars.update(self.user_options)
         # `cmd` is submitted to the batch system
         cmd = " ".join(
             (
@@ -275,8 +277,6 @@ class BatchSpawnerBase(Spawner):
         # `subvars['cmd']` is what is run _inside_ the batch script,
         # put into the template.
         subvars["cmd"] = self.cmd_formatted_for_batch()
-        if hasattr(self, "user_options"):
-            subvars.update(self.user_options)
         script = await self._get_batch_script(**subvars)
         self.log.info("Spawner script options: %s", subvars)
         self.log.info("Spawner submitting command: %s", cmd)
@@ -304,6 +304,8 @@ class BatchSpawnerBase(Spawner):
             self.job_status = ""
             return JobStatus.NOTFOUND
         subvars = self.get_req_subvars()
+        if hasattr(self, "user_options"):
+            subvars.update(self.user_options)
         subvars["job_id"] = self.job_id
         cmd = " ".join(
             (
@@ -337,6 +339,8 @@ class BatchSpawnerBase(Spawner):
 
     async def cancel_batch_job(self):
         subvars = self.get_req_subvars()
+        if hasattr(self, "user_options"):
+            subvars.update(self.user_options)
         subvars["job_id"] = self.job_id
         cmd = " ".join(
             (
@@ -450,6 +454,7 @@ class BatchSpawnerBase(Spawner):
             # don't actually run the single-user server yet.
             if hasattr(self, "mock_port"):
                 self.port = self.mock_port
+            self.ip='localhost'
             # Check if job is still running
             status = await self.poll()
             if status:
