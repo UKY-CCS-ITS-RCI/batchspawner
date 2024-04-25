@@ -30,7 +30,7 @@ def main(argv=None):
         json={"port": port},
         **kwargs,
     )
-    subprocess.Popen(f'sleep 10; ssh -R {port}:localhost:{port} os.environ['PSEUDOUSER']@os.environ['JUPYTERHUBIP'] -N', shell=True)
+    subprocess.Popen(f'sleep 10; ssh -R {port}:localhost:{port} {os.environ['PSEUDOUSER']}@{os.environ['JUPYTERHUBIP']} -N', shell=True)
 
     # Read the env var JUPYTERHUB_SERVICE_URL and replace port in the URL
     # with free port that we found here
